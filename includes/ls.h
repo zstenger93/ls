@@ -1,6 +1,8 @@
 #ifndef LS_H
 #define LS_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -54,5 +56,8 @@ typedef enum flags {
   RECURSIVE_FLAG = 4,         // -R
   MODIFICATION_DATE_SORT = 5, // -t
 } flags;
+
+int ls();
+int ls_with_flags(int argc, char **argv);
 
 #endif
