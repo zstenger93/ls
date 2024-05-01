@@ -3,13 +3,13 @@
 
 #include "../libft/includes/libft.h"
 
-#include <stdio.h>
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <glob.h>
 #include <grp.h>
 #include <pwd.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/acl.h>
 #include <sys/ioctl.h>
@@ -19,7 +19,7 @@
 #include <sys/xattr.h>
 #include <time.h>
 
-#define RED "\x1b[31m"
+#define RED "\x1b[1;31m"
 #define GREEN "\x1b[32m"
 #define BOLD_GREEN "\x1b[32;1m"
 #define YELLOW "\x1b[33m"
@@ -27,6 +27,16 @@
 #define MAGENTA "\x1b[35m"
 #define BOLD_CYAN "\x1b[96;1m"
 #define COLOR_RESET "\x1b[0m"
+
+#define ERROR_TEXT_0 RED "error:" COLOR_RESET " Found argument '" YELLOW "-"
+#define ERROR_TEXT_1                                                           \
+  COLOR_RESET "' which wasn't expected, or isn't valid in this context\n\nIf " \
+              "you tried "                                                     \
+              "to supply `-"
+#define ERROR_TEXT_2 "` as a value rather than a flag, use `-- -"
+#define ERROR_TEXT_3                                                           \
+  "`\n\nUSAGE:\n    ls [OPTIONS] [--] [FILE]...\n\nFor more information try"
+#define HELP_TEXT GREEN " --help" COLOR_RESET "\n"
 
 #define FLAG_ERR 1
 #define PATH_ERR 2
@@ -50,11 +60,11 @@
 #define IS_OTHER 16
 
 typedef struct s_flags {
-    int a;
-    int r;
-    int R;
-    int l;
-    int t;
+  int a;
+  int r;
+  int R;
+  int l;
+  int t;
 } t_flags;
 
 int ls();
