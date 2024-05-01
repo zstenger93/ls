@@ -11,7 +11,7 @@
 #include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/acl.h>
+// #include <sys/acl.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -68,7 +68,14 @@ typedef struct s_flags {
 } t_flags;
 
 int ls();
+
 int parse_flags(int argc, char **argv, t_flags *flags);
 int ls_with_flags(int argc, char **argv, t_flags *flags);
+int ft_strcasecmp(const char *s1, const char *s2);
+void bubble_sort(struct dirent *arr[], int n);
+
+void long_format(struct dirent *entry);
+void write_int(int num);
+void readable_file_size(double size);
 
 #endif
