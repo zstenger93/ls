@@ -68,14 +68,17 @@ typedef struct s_flags {
 } t_flags;
 
 int ls();
-
 int parse_flags(int argc, char **argv, t_flags *flags);
 int ls_with_flags(int argc, char **argv, t_flags *flags);
-int ft_strcasecmp(const char *s1, const char *s2);
-void bubble_sort(struct dirent *arr[], int n);
 
+// ls -l
 void long_format(struct dirent *entry);
-void write_int(int num);
 void readable_file_size(double size);
+void write_file_permissions(struct stat fileStat);
+
+// UTILS
+void write_int(int num);
+void bubble_sort(struct dirent *arr[], int n);
+int ft_strcasecmp(const char *s1, const char *s2);
 
 #endif
