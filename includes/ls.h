@@ -44,7 +44,7 @@
 #define FILE_ERR 4
 #define MEM_ERR 5
 #define FILE_ACCESS_ERR 6
-#define NONEXISTENT_ERR 7
+#define NONEXISTENT_ERR 2
 
 #define INVALID_FLAG 2
 
@@ -68,8 +68,10 @@ typedef struct s_flags {
 } t_flags;
 
 int ls();
-int parse_flags(int argc, char **argv, t_flags *flags);
+int parse_flags(int argc, char **argv, t_flags *flags, char **files);
 int ls_with_flags(int argc, char **argv, t_flags *flags);
+int read_and_sort_directory(DIR *dir, struct s_flags *flags,
+                            struct dirent *entries[]);
 
 // ls -l
 void long_format(struct dirent *entry);

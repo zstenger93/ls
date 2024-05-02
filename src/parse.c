@@ -1,6 +1,6 @@
 #include "../includes/ls.h"
 
-int parse_flags(int argc, char **argv, t_flags *flags) {
+int parse_flags(int argc, char **argv, t_flags *flags, char **files) {
   int i, j;
   char *valid_flags = "arlRt";
 
@@ -31,6 +31,17 @@ int parse_flags(int argc, char **argv, t_flags *flags) {
           return INVALID_FLAG;
         }
         j++;
+      }
+    } else {
+      struct stat path_stat;
+      if (stat(argv[i], &path_stat) == -1) {
+        write(1, "ls: No such file or directory (os error 2).\n", 44);
+        return NONEXISTENT_ERR;
+      }
+      if (S_ISDIR(path_stat.st_mode)) {
+        files[i] = ft_strdup(argv[i]);
+      } else if (access(argv[i], F_OK) != -1) {
+        files[i] = ft_strdup(argv[i]);
       }
     }
   }
