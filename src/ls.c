@@ -1,10 +1,10 @@
 #include "../includes/ls.h"
 
-int ls() {
+int ls(const char *path) {
   DIR *dir;
   struct dirent *entry;
 
-  if ((dir = opendir(".")) == NULL) {
+  if ((dir = opendir(path)) == NULL) {
     perror("opendir");
     return DIR_ERR;
   }

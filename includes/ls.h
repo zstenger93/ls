@@ -67,9 +67,9 @@ typedef struct s_flags {
   int t;
 } t_flags;
 
-int ls();
+int ls(const char *path);
 int parse_flags(int argc, char **argv, t_flags *flags, char **files);
-int ls_with_flags(int argc, char **argv, t_flags *flags);
+int ls_with_flags(int argc, char **argv, t_flags *flags, char **files);
 int read_and_sort_directory(DIR *dir, struct s_flags *flags,
                             struct dirent *entries[]);
 
@@ -82,6 +82,7 @@ void write_file_permissions(struct stat fileStat);
 void bubble_sort_time(struct dirent *arr[], int n);
 // ls -r
 // ls -R
+void print_directory_contents(const char *dir_path);
 
 // UTILS
 void write_int(int num);

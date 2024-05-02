@@ -39,6 +39,7 @@ int parse_flags(int argc, char **argv, t_flags *flags, char **files) {
         return NONEXISTENT_ERR;
       }
       if (S_ISDIR(path_stat.st_mode)) {
+        write(2, argv[i], ft_strlen(argv[i]));
         files[i] = ft_strdup(argv[i]);
       } else if (access(argv[i], F_OK) != -1) {
         files[i] = ft_strdup(argv[i]);
