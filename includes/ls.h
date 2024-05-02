@@ -76,6 +76,11 @@ void long_format(struct dirent *entry);
 void readable_file_size(double size);
 void write_file_permissions(struct stat fileStat);
 
+// ls -t
+void bubble_sort_time(struct dirent *arr[], int n);
+// ls -r
+// ls -R
+
 // UTILS
 void write_int(int num);
 void bubble_sort(struct dirent *arr[], int n);

@@ -23,10 +23,12 @@ int ls() {
   bubble_sort(entries, num_entries);
 
   for (int i = 0; i < num_entries; i++) {
+    if (i > 0) {
+      write(1, "  ", 2);
+    }
     write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
-    write(1, "\n", 1);
     free(entries[i]);
   }
-
+  write(1, "\n", 1);
   return 0;
 }

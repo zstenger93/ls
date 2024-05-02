@@ -23,17 +23,31 @@ int ls_with_flags(int argc, char **argv, t_flags *flags) {
 
   bubble_sort(entries, num_entries);
 
-  if (flags->a) {
+  if (flags->a) { // showing all files
     for (int i = 0; i < num_entries; i++) {
       write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
       write(1, "\n", 1);
       free(entries[i]);
     }
-  } else if (flags->l) {
+  } else if (flags->l) { // long listing format
     for (int i = 0; i < num_entries; i++) {
       long_format(entries[i]);
       free(entries[i]);
     }
+  } else if (flags->t) { // order by modification time
+    bubble_sort_time(entries, num_entries);
+    for (int i = 0; i < num_entries; i++) {
+      write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
+      write(1, "\n", 1);
+      free(entries[i]);
+    }
+  } else if (flags->r) { // reverse order
+    for (int i = num_entries - 1; i >= 0; i--) {
+      write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
+      write(1, "  ", 2);
+      free(entries[i]);
+    }
+    write(1, "\n", 1);
   }
 
   (void)argc;

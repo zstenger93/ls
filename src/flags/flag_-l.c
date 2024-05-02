@@ -19,7 +19,7 @@ void long_format(struct dirent *entry) {
   }
 
   struct group *gr = getgrgid(fileStat.st_gid);
-  if (gr != NULL) { // group name of the file
+  if (gr != NULL) { // group name
     write(1, gr->gr_name, ft_strlen(gr->gr_name));
   }
   write(1, "\t", 1);
@@ -27,7 +27,7 @@ void long_format(struct dirent *entry) {
   readable_file_size(fileStat.st_size);
   write(1, "\t", 1);
 
-  char *time = ctime(&fileStat.st_mtime); // modification time of the file
+  char *time = ctime(&fileStat.st_mtime); // modification time
   time[ft_strlen(time) - 1] = '\0';
   write(1, time, ft_strlen(time));
   write(1, " ", 1);
@@ -90,7 +90,6 @@ void readable_file_size(double size) {
     size_str[len - i - 1] = temp;
   }
 
-  // Write the size and unit to the terminal
   write(1, size_str, ft_strlen(size_str));
   write(1, " ", 1);
   write(1, units[i], ft_strlen(units[i]));
