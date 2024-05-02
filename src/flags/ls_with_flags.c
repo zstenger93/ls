@@ -40,14 +40,13 @@ int ls_with_flags(int argc, char **argv, t_flags *flags, char **files) {
       free(entries[i]);
     }
     write(1, "\n", 1);
-  } else if (flags->R) { // recursive
+  } else if (flags->R) { // recursive directory listing
     (void)files;
     ls(".");
-    print_directory_contents(".");
-  }
-
-  for (int i = 0; i < num_entries; i++) {
-    free(entries[i]);
+    print_directory_contents_recursively(".");
+    for (int i = 0; i < num_entries; i++) {
+      free(entries[i]);
+    }
   }
 
   (void)argc;
@@ -56,7 +55,7 @@ int ls_with_flags(int argc, char **argv, t_flags *flags, char **files) {
   return 0;
 }
 
-void print_directory_contents(const char *dir_path) {
+void print_directory_contents_recursively(const char *dir_path) {
   DIR *dir = opendir(dir_path);
 
   if (dir == NULL) {
@@ -72,23 +71,8 @@ void print_directory_contents(const char *dir_path) {
     if (S_ISDIR(path_stat.st_mode) && ft_strncmp(entry->d_name, ".", 1) != 0 &&
         ft_strncmp(entry->d_name, "..", 2) != 0) {
       char path[1024];
-      int i = 0;
 
-      while (dir_path[i] != '\0') {
-        path[i] = dir_path[i];
-        i++;
-      }
-
-      path[i] = '/';
-      i++;
-      int j = 0;
-
-      while (entry->d_name[j] != '\0') {
-        path[i + j] = entry->d_name[j];
-        j++;
-      }
-
-      path[i + j] = '\0';
+      construct_path(path, dir_path, entry->d_name);
 
       struct stat path_stat_check;
       stat(path, &path_stat_check);
@@ -98,13 +82,38 @@ void print_directory_contents(const char *dir_path) {
         write(1, path, ft_strlen(path));
         write(1, ":\n", 2);
         ls(path);
-        print_directory_contents(path);
+        print_directory_contents_recursively(path);
       }
     }
   }
   closedir(dir);
 }
 
+/*
+    always updating the and constructing the
+    current path for the recursive call
+*/
+void construct_path(char *path, const char *dir_path, const char *entry_name) {
+  int i = 0;
+  while (dir_path[i] != '\0') {
+    path[i] = dir_path[i];
+    i++;
+  }
+  path[i] = '/';
+  i++;
+  int j = 0;
+  while (entry_name[j] != '\0') {
+    path[i + j] = entry_name[j];
+    j++;
+  }
+  path[i + j] = '\0';
+}
+
+/*
+    read and sort the directory entries and
+    based on the flags provided sort them
+    in order
+*/
 int read_and_sort_directory(DIR *dir, struct s_flags *flags,
                             struct dirent *entries[]) {
   struct dirent *entry;

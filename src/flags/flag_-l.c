@@ -37,12 +37,10 @@ void long_format(struct dirent *entry) {
 }
 
 void write_file_permissions(struct stat fileStat) {
-  // file type:
-  // 'd' for directory, '-' for regular file
+  // file type: 'd' for directory, '-' for regular file
   write(1, (S_ISDIR(fileStat.st_mode)) ? "d" : "-", 1);
 
-  // user permissions:
-  // 'r' for read, 'w' for write, 'x' for execute
+  // user permissions: 'r' for read, 'w' for write, 'x' for execute
   write(1, (fileStat.st_mode & S_IRUSR) ? "r" : "-", 1);
   write(1, (fileStat.st_mode & S_IWUSR) ? "w" : "-", 1);
   write(1, (fileStat.st_mode & S_IXUSR) ? "x" : "-", 1);

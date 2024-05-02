@@ -82,7 +82,8 @@ void write_file_permissions(struct stat fileStat);
 void bubble_sort_time(struct dirent *arr[], int n);
 // ls -r
 // ls -R
-void print_directory_contents(const char *dir_path);
+void print_directory_contents_recursively(const char *dir_path);
+void construct_path(char *path, const char *dir_path, const char *entry_name);
 
 // UTILS
 void write_int(int num);
