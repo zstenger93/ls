@@ -4,13 +4,15 @@ int main(int argc, char **argv) {
   int exit_status = 0;
   t_flags flags;
   char **files = malloc(argc * sizeof(char *));
+
   for (int i = 0; i < argc; i++) {
     files[i] = NULL;
   }
+  files[0] = ft_strdup(".");
   ft_memset(&flags, 0, sizeof(t_flags));
 
   if (argc == 1) {
-    exit_status = ls(".");
+    exit_status = ls(files[0]);
   } else {
     exit_status = parse_flags(argc, argv, &flags, files);
     if (exit_status == 0)

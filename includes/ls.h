@@ -4,18 +4,12 @@
 #include "../libft/includes/libft.h"
 
 #include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <glob.h>
 #include <grp.h>
 #include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
-// #include <sys/acl.h>
-#include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <sys/types.h>
 #include <sys/xattr.h>
 #include <time.h>
 
@@ -38,26 +32,11 @@
   "`\n\nUSAGE:\n    ls [OPTIONS] [--] [FILE]...\n\nFor more information try"
 #define HELP_TEXT GREEN " --help" COLOR_RESET "\n"
 
-#define FLAG_ERR 1
 #define PATH_ERR 2
 #define DIR_ERR 3
-#define FILE_ERR 4
-#define MEM_ERR 5
-#define FILE_ACCESS_ERR 6
 #define NONEXISTENT_ERR 2
 
 #define INVALID_FLAG 2
-
-#define IS_NONEXISTENT 8
-#define IS_DIR 9
-#define IS_NOT_DIR 10
-#define IS_FILE 11
-#define IS_NOT_READABLE 12
-#define IS_LINK 13
-
-#define IS_USER 14
-#define IS_GROUP 15
-#define IS_OTHER 16
 
 typedef struct s_flags {
   int a;
@@ -80,7 +59,9 @@ void write_file_permissions(struct stat fileStat);
 
 // ls -t
 void bubble_sort_time(struct dirent *arr[], int n);
+
 // ls -r
+
 // ls -R
 void print_directory_contents_recursively(const char *dir_path);
 void construct_path(char *path, const char *dir_path, const char *entry_name);

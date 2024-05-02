@@ -1,9 +1,13 @@
 #include "../../includes/ls.h"
 
+/*
+    symbolic link display can be tested with:
+    touch test1 && nl -s test1 test2
+*/
 void long_format(struct dirent *entry) {
   struct stat fileStat;
 
-  if (stat(entry->d_name, &fileStat) < 0)
+  if (lstat(entry->d_name, &fileStat) < 0)
     return;
 
   write_file_permissions(fileStat);
@@ -33,6 +37,17 @@ void long_format(struct dirent *entry) {
   write(1, " ", 1);
 
   write(1, entry->d_name, ft_strlen(entry->d_name));
+
+  if (S_ISLNK(fileStat.st_mode)) {
+    char link_target[1024];
+    ssize_t len = readlink(entry->d_name, link_target, sizeof(link_target) - 1);
+    if (len != -1) {
+      link_target[len] = '\0';
+      write(1, " -> ", 4);
+      write(1, link_target, ft_strlen(link_target));
+    }
+  }
+
   write(1, "\n", 1);
 }
 
