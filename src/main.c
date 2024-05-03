@@ -25,14 +25,14 @@ int main(int argc, char **argv) {
       }
       if (folder_count > 0) {
         if (folder_count == 1)
-          exit_status = ls_with_flags(argc, argv, &flags, files[x - 1]);
+          exit_status = ls_with_flags(&flags, files[folder_count]);
         else {
           x = 1;
           while (files[x] != NULL) {
             if (files[x][0] != '\t') {
               write(1, files[x], ft_strlen(files[x]));
               write(1, ":\n", 2);
-              ls_with_flags(argc, argv, &flags, files[x]);
+              ls_with_flags(&flags, files[x]);
               if (files[x + 2] != NULL)
                 write(1, "\n", 1);
             }
@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
           }
         }
       } else
-        exit_status = ls_with_flags(argc, argv, &flags, ".");
+        exit_status = ls_with_flags(&flags, ".");
     }
     for (int i = 0; i < argc; i++) {
       if (files[i] != NULL) {

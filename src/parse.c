@@ -17,7 +17,7 @@ int parse_flags(int argc, char **argv, t_flags *flags, char **files) {
             flags->R = 1;
           else if (argv[i][j] == 'l')
             flags->l = 1;
-          else if (argv[i][j] == 't') // always goes before -r
+          else if (argv[i][j] == 't')
             flags->t = 1;
         } else {
           write(2, ERROR_TEXT_0, ft_strlen(ERROR_TEXT_0));
@@ -36,7 +36,9 @@ int parse_flags(int argc, char **argv, t_flags *flags, char **files) {
     } else {
       struct stat path_stat;
       if (stat(argv[i], &path_stat) == -1) {
-        write(1, "ls: No such file or directory (os error 2).\n", 44);
+        write(2, "ls: ", 4);
+        write(2, argv[i], ft_strlen(argv[i]));
+        write(1, ": No such file or directory (os error 2).\n\n", 43);
         return NONEXISTENT_ERR;
       }
       if (S_ISDIR(path_stat.st_mode)) {

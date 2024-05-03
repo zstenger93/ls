@@ -1,6 +1,6 @@
 #include "../../includes/ls.h"
 
-int ls_with_flags(int argc, char **argv, t_flags *flags, char *files) {
+int ls_with_flags(t_flags *flags, char *files) {
   DIR *dir;
 
   if ((dir = opendir(files)) == NULL) {
@@ -14,59 +14,32 @@ int ls_with_flags(int argc, char **argv, t_flags *flags, char *files) {
   if (num_entries < 0) {
     return DIR_ERR;
   }
-
-  if (flags->t && !flags->a && !flags->r && !flags->R &&
-      !flags->l) { // order by modification time
-    for (int i = 0; i < num_entries; i++) {
-      write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
-      write(1, "  ", 2);
-      free(entries[i]);
-    }
-    write(1, "\n", 1);
-  }
-  if (flags->r && !flags->a && !flags->t && !flags->R &&
-      !flags->l) { // reverse order
-    for (int i = 0; i < num_entries; i++) {
-      write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
-      write(1, "  ", 2);
-      free(entries[i]);
-    }
-    write(1, "\n", 1);
-  }
-  if (flags->a && !flags->l && !flags->R) { // showing all files
-    for (int i = 0; i < num_entries; i++) {
-      write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
-      write(1, "  ", 1);
-      free(entries[i]);
-    }
-    write(1, "\n", 1);
-  }
-  if (flags->l) { // long listing format
+  // order by modification time, always goes before -r
+  if (flags->t && !flags->a && !flags->r && !flags->R && !flags->l) {
+    print_and_free_entries(entries, num_entries);
+  } // reverse order
+  if (flags->r && !flags->a && !flags->t && !flags->R && !flags->l) {
+    print_and_free_entries(entries, num_entries);
+  } // showing all files
+  if (flags->a && !flags->l && !flags->R) {
+    print_and_free_entries(entries, num_entries);
+  } // long listing format
+  if (flags->l) {
     for (int i = 0; i < num_entries; i++) {
       long_format(entries[i]);
       free(entries[i]);
     }
-  }
-  if (flags->R) { // recursive directory listing
+  } // recursive directory listing
+  if (flags->R) {
     ls(files);
-    print_directory_contents_recursively(files);
+    print_directory_contents_recursively(flags, files);
     for (int i = 0; i < num_entries; i++) {
       free(entries[i]);
     }
+  } // default alphabetical order
+  if (!flags->a && !flags->r && !flags->R && !flags->l && !flags->t) {
+    print_and_free_entries(entries, num_entries);
   }
-  if (!flags->a && !flags->r && !flags->R && !flags->l &&
-      !flags->t) { // default alphabetical order
-    for (int i = 0; i < num_entries; i++) {
-      write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
-      write(1, "  ", 2);
-      free(entries[i]);
-    }
-    write(1, "\n", 1);
-  }
-
-  (void)argc;
-  (void)argv;
-
   return 0;
 }
 
@@ -109,4 +82,13 @@ void reverse_entries(struct dirent *entries[], int num_entries) {
     entries[i] = entries[num_entries - i - 1];
     entries[num_entries - i - 1] = temp;
   }
+}
+
+void print_and_free_entries(struct dirent *entries[], int num_entries) {
+  for (int i = 0; i < num_entries; i++) {
+    write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
+    write(1, "  ", 2);
+    free(entries[i]);
+  }
+  write(1, "\n", 1);
 }
