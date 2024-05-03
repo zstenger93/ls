@@ -46,12 +46,13 @@ int main(int argc, char **argv) {
       } else
         exit_status = ls_with_flags(&flags, ".", folder_count);
     }
-    for (int i = 0; i < len; i++) {
-      if (files[i] != NULL) {
-        free(files[i]);
-      }
-    }
-    free(files);
-    return exit_status;
   }
+  for (int i = 0; i < len; i++) {
+    if (files[i] != NULL) {
+      free(files[i]);
+    }
+  }
+  free(files);
+
+  return exit_status;
 }
