@@ -1,7 +1,7 @@
 #include "../../includes/ls.h"
 
 void print_directory_contents_recursively(t_flags *flags,
-                                          const char *dir_path) {
+                                          const char *dir_path, int folder_count) {
   DIR *dir = opendir(dir_path);
 
   if (dir == NULL) {
@@ -27,8 +27,8 @@ void print_directory_contents_recursively(t_flags *flags,
         write(1, "\n", 1);
         write(1, path, ft_strlen(path));
         write(1, ":\n", 2);
-        ls_with_flags(flags, path);
-        print_directory_contents_recursively(flags, path);
+        ls_with_flags(flags, path, folder_count);
+        print_directory_contents_recursively(flags, path, folder_count);
       }
     }
   }

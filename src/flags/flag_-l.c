@@ -36,7 +36,9 @@ void long_format(struct dirent *entry) {
   write(1, time, ft_strlen(time));
   write(1, " ", 1);
 
-  write(1, entry->d_name, ft_strlen(entry->d_name));
+  char *last_slash = ft_strrchr(entry->d_name, '/');
+  char *filename = last_slash ? last_slash + 1 : entry->d_name;
+  write(1, filename, ft_strlen(filename));
 
   if (S_ISLNK(fileStat.st_mode)) {
     char link_target[1024];

@@ -1,6 +1,6 @@
 #include "../../includes/ls.h"
 
-int ls_with_flags(t_flags *flags, char *files) {
+int ls_with_flags(t_flags *flags, char *files, int folder_count) {
   DIR *dir;
 
   if ((dir = opendir(files)) == NULL) {
@@ -9,36 +9,42 @@ int ls_with_flags(t_flags *flags, char *files) {
   }
 
   struct dirent *entries[1024];
-  int num_entries = read_and_sort_directory(dir, flags, entries);
+  int num_entries =
+      read_and_sort_directory(dir, flags, entries, folder_count, files);
 
   if (num_entries < 0) {
     return DIR_ERR;
   }
+
   // order by modification time, always goes before -r
   if (flags->t && !flags->a && !flags->r && !flags->R && !flags->l) {
-    print_and_free_entries(entries, num_entries);
+    print_entries(entries, num_entries);
   } // reverse order
   if (flags->r && !flags->a && !flags->t && !flags->R && !flags->l) {
-    print_and_free_entries(entries, num_entries);
+    print_entries(entries, num_entries);
   } // showing all files
   if (flags->a && !flags->l && !flags->R) {
-    print_and_free_entries(entries, num_entries);
+    print_entries(entries, num_entries);
   } // long listing format
   if (flags->l) {
     for (int i = 0; i < num_entries; i++) {
       long_format(entries[i]);
-      free(entries[i]);
+      //   free(entries[i]);
     }
   } // recursive directory listing
   if (flags->R) {
-    ls(files);
-    print_directory_contents_recursively(flags, files);
-    for (int i = 0; i < num_entries; i++) {
-      free(entries[i]);
-    }
+    if ((folder_count == 0 && !flags->l) || !flags->l)
+      ls(files);
+    static int called = 0;
+    if (called == 0)
+      print_directory_contents_recursively(flags, files, folder_count);
+    called = 1;
   } // default alphabetical order
   if (!flags->a && !flags->r && !flags->R && !flags->l && !flags->t) {
-    print_and_free_entries(entries, num_entries);
+    print_entries(entries, num_entries);
+  }
+  for (int i = 0; i < num_entries; i++) {
+    free(entries[i]);
   }
   return 0;
 }
@@ -52,7 +58,8 @@ int ls_with_flags(t_flags *flags, char *files) {
     -r: reverse order
 */
 int read_and_sort_directory(DIR *dir, struct s_flags *flags,
-                            struct dirent *entries[]) {
+                            struct dirent *entries[], int folder_count,
+                            char *files) {
   struct dirent *entry;
   int num_entries = 0;
 
@@ -60,6 +67,15 @@ int read_and_sort_directory(DIR *dir, struct s_flags *flags,
     if (flags->a || entry->d_name[0] != '.') {
       entries[num_entries] = malloc(sizeof(struct dirent));
       ft_memcpy(entries[num_entries], entry, sizeof(struct dirent));
+      (void)folder_count;
+      //   if (folder_count > 0) {
+      char temp[1024];
+      ft_strlcpy(temp, files, sizeof(temp));
+      ft_strlcat(temp, "/", sizeof(temp));
+      ft_strlcat(temp, entries[num_entries]->d_name, sizeof(temp));
+      ft_strlcpy(entries[num_entries]->d_name, temp,
+                 sizeof(entries[num_entries]->d_name));
+      // }
       num_entries++;
     }
   }
@@ -84,11 +100,13 @@ void reverse_entries(struct dirent *entries[], int num_entries) {
   }
 }
 
-void print_and_free_entries(struct dirent *entries[], int num_entries) {
-  for (int i = 0; i < num_entries; i++) {
-    write(1, entries[i]->d_name, ft_strlen(entries[i]->d_name));
-    write(1, "  ", 2);
-    free(entries[i]);
-  }
-  write(1, "\n", 1);
+void print_entries(struct dirent *entries[], int num_entries) {
+    for (int i = 0; i < num_entries; i++) {
+        char *last_slash = ft_strrchr(entries[i]->d_name, '/');
+        char *filename = last_slash ? last_slash + 1 : entries[i]->d_name;
+        write(1, filename, ft_strlen(filename));
+        write(1, "  ", 2);
+        // free(entries[i]);
+    }
+    write(1, "\n", 1);
 }

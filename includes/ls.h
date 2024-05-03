@@ -48,10 +48,10 @@ typedef struct s_flags {
 
 int ls(const char *path);
 int parse_flags(int argc, char **argv, t_flags *flags, char **files);
-int ls_with_flags(t_flags *flags, char *files);
+int ls_with_flags(t_flags *flags, char *files, int folder_count);
 int read_and_sort_directory(DIR *dir, struct s_flags *flags,
-                            struct dirent *entries[]);
-void print_and_free_entries(struct dirent *entries[], int num_entries);
+                            struct dirent *entries[], int folder_count, char *files);
+void print_entries(struct dirent *entries[], int num_entries);
 
 // ls -l
 void long_format(struct dirent *entry);
@@ -65,7 +65,7 @@ void bubble_sort_time(struct dirent *arr[], int n);
 void reverse_entries(struct dirent *entries[], int num_entries);
 
 // ls -R
-void print_directory_contents_recursively(t_flags *flags, const char *dir_path);
+void print_directory_contents_recursively(t_flags *flags, const char *dir_path, int folder_count);
 void construct_path(char *path, const char *dir_path, const char *entry_name);
 
 // UTILS
