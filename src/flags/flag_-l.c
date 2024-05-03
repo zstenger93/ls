@@ -81,27 +81,8 @@ void readable_file_size(double size) {
   }
 
   int int_size = (int)size;
-
-  // Convert the integer size to a string
   char size_str[10];
-  int len = 0;
-
-  if (int_size == 0) {
-    size_str[len++] = '0';
-  } else {
-    while (int_size != 0) {
-      size_str[len++] = '0' + (int_size % 10);
-      int_size /= 10;
-    }
-  }
-  size_str[len] = '\0';
-
-  // Reverse the size string
-  for (int i = 0; i < len / 2; i++) {
-    char temp = size_str[i];
-    size_str[i] = size_str[len - i - 1];
-    size_str[len - i - 1] = temp;
-  }
+  int_to_str(int_size, size_str);
 
   write(1, size_str, ft_strlen(size_str));
   write(1, " ", 1);

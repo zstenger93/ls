@@ -50,3 +50,25 @@ void bubble_sort_time(struct dirent *arr[], int n) {
     }
   }
 }
+
+// Convert the integer size to a string
+void int_to_str(int int_size, char *size_str) {
+    int len = 0;
+
+    if (int_size == 0) {
+        size_str[len++] = '0';
+    } else {
+        while (int_size != 0) {
+            size_str[len++] = '0' + (int_size % 10);
+            int_size /= 10;
+        }
+    }
+    size_str[len] = '\0';
+
+    // Reverse the size string
+    for (int i = 0; i < len / 2; i++) {
+        char temp = size_str[i];
+        size_str[i] = size_str[len - i - 1];
+        size_str[len - i - 1] = temp;
+    }
+}
