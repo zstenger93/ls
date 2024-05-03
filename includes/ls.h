@@ -13,16 +13,25 @@
 #include <sys/xattr.h>
 #include <time.h>
 
-#define RED "\x1b[1;31m"
+#define RED "\x1b[31m"
+#define RED_BOLD "\x1b[1;31m"
 #define GREEN "\x1b[32m"
 #define BOLD_GREEN "\x1b[32;1m"
 #define YELLOW "\x1b[33m"
 #define BLUE "\x1b[34m"
 #define MAGENTA "\x1b[35m"
-#define BOLD_CYAN "\x1b[96;1m"
+#define CYAN "\x1b[96m"
+#define WHITE "\x1b[37m"
 #define COLOR_RESET "\x1b[0m"
 
-#define ERROR_TEXT_0 RED "error:" COLOR_RESET " Found argument '" YELLOW "-"
+#define RED_X RED "x" COLOR_RESET
+#define YELLOW_R YELLOW "r" COLOR_RESET
+#define GREEN_W GREEN "w" COLOR_RESET
+
+#define FOLDER_COLOR GREEN
+#define FILE_COLOR WHITE
+
+#define ERROR_TEXT_0 RED_BOLD "error:" COLOR_RESET " Found argument '" YELLOW "-"
 #define ERROR_TEXT_1                                                           \
   COLOR_RESET "' which wasn't expected, or isn't valid in this context\n\nIf " \
               "you tried "                                                     \
@@ -46,7 +55,7 @@ typedef struct s_flags {
   int t;
 } t_flags;
 
-int ls(const char *path);
+int ls(const char *path, t_flags *flags, char *files);
 int parse_flags(int argc, char **argv, t_flags *flags, char **files);
 int ls_with_flags(t_flags *flags, char *files, int folder_count);
 int read_and_sort_directory(DIR *dir, struct s_flags *flags,

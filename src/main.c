@@ -5,13 +5,13 @@ int main(int argc, char **argv) {
   t_flags flags;
   char **files = malloc((argc + 1) * sizeof(char *));
 
-  for (; len < argc; len++) {
+  for (; len <= argc; len++) {
     files[len] = NULL;
   }
   ft_memset(&flags, 0, sizeof(t_flags));
 
   if (argc == 1) {
-    exit_status = ls(".");
+    exit_status = ls(".", &flags, ".");
   } else {
     exit_status = parse_flags(argc, argv, &flags, files);
     if (exit_status == 0) {
@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
       } else
         exit_status = ls_with_flags(&flags, ".", folder_count);
     }
-    for (int i = 0; i < argc; i++) {
+    for (int i = 0; i < len; i++) {
       if (files[i] != NULL) {
         free(files[i]);
       }

@@ -38,7 +38,16 @@ void long_format(struct dirent *entry) {
 
   char *last_slash = ft_strrchr(entry->d_name, '/');
   char *filename = last_slash ? last_slash + 1 : entry->d_name;
-  write(1, filename, ft_strlen(filename));
+  if (S_ISDIR(fileStat.st_mode)) {
+    write(1, FOLDER_COLOR, ft_strlen(FOLDER_COLOR));
+    write(1, filename, ft_strlen(filename));
+    write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
+  } else if (S_ISREG(fileStat.st_mode)) {
+    write(1, FILE_COLOR, ft_strlen(FILE_COLOR));
+    write(1, filename, ft_strlen(filename));
+    write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
+  } else
+    write(1, filename, ft_strlen(filename));
 
   if (S_ISLNK(fileStat.st_mode)) {
     char link_target[1024];
@@ -55,22 +64,49 @@ void long_format(struct dirent *entry) {
 
 void write_file_permissions(struct stat fileStat) {
   // file type: 'd' for directory, '-' for regular file
-  write(1, (S_ISDIR(fileStat.st_mode)) ? "d" : "-", 1);
+  char type;
+  if (S_ISREG(fileStat.st_mode)) {
+    type = '-';
+  } else if (S_ISDIR(fileStat.st_mode)) {
+    type = 'd';
+  } else if (S_ISCHR(fileStat.st_mode)) {
+    type = 'c';
+  } else if (S_ISBLK(fileStat.st_mode)) {
+    type = 'b';
+  } else if (S_ISFIFO(fileStat.st_mode)) {
+    type = 'p';
+  } else if (S_ISLNK(fileStat.st_mode)) {
+    type = 'l';
+  } else if (S_ISSOCK(fileStat.st_mode)) {
+    type = 's';
+  } else {
+    type = '?';
+  }
+  write(1, &type, 1);
 
   // user permissions: 'r' for read, 'w' for write, 'x' for execute
-  write(1, (fileStat.st_mode & S_IRUSR) ? "r" : "-", 1);
-  write(1, (fileStat.st_mode & S_IWUSR) ? "w" : "-", 1);
-  write(1, (fileStat.st_mode & S_IXUSR) ? "x" : "-", 1);
+  write(1, (fileStat.st_mode & S_IRUSR) ? YELLOW_R : "-",
+        ft_strlen((fileStat.st_mode & S_IRUSR) ? YELLOW_R : "-"));
+  write(1, (fileStat.st_mode & S_IWUSR) ? GREEN_W : "-",
+        ft_strlen((fileStat.st_mode & S_IWUSR) ? GREEN_W : "-"));
+  write(1, (fileStat.st_mode & S_IXUSR) ? RED_X : "-",
+        ft_strlen((fileStat.st_mode & S_IXUSR) ? RED_X : "-"));
 
   // group permissions:
-  write(1, (fileStat.st_mode & S_IRGRP) ? "r" : "-", 1);
-  write(1, (fileStat.st_mode & S_IWGRP) ? "w" : "-", 1);
-  write(1, (fileStat.st_mode & S_IXGRP) ? "x" : "-", 1);
+  write(1, (fileStat.st_mode & S_IRGRP) ? YELLOW_R : "-",
+        ft_strlen((fileStat.st_mode & S_IRGRP) ? YELLOW_R : "-"));
+  write(1, (fileStat.st_mode & S_IWGRP) ? GREEN_W : "-",
+        ft_strlen((fileStat.st_mode & S_IWGRP) ? GREEN_W : "-"));
+  write(1, (fileStat.st_mode & S_IXGRP) ? RED_X : "-",
+        ft_strlen((fileStat.st_mode & S_IXGRP) ? RED_X : "-"));
 
   // other permissions:
-  write(1, (fileStat.st_mode & S_IROTH) ? "r" : "-", 1);
-  write(1, (fileStat.st_mode & S_IWOTH) ? "w" : "-", 1);
-  write(1, (fileStat.st_mode & S_IXOTH) ? "x" : "-", 1);
+  write(1, (fileStat.st_mode & S_IROTH) ? YELLOW_R : "-",
+        ft_strlen((fileStat.st_mode & S_IROTH) ? YELLOW_R : "-"));
+  write(1, (fileStat.st_mode & S_IWOTH) ? GREEN_W : "-",
+        ft_strlen((fileStat.st_mode & S_IWOTH) ? GREEN_W : "-"));
+  write(1, (fileStat.st_mode & S_IXOTH) ? RED_X : "-",
+        ft_strlen((fileStat.st_mode & S_IXOTH) ? RED_X : "-"));
 }
 
 void readable_file_size(double size) {
