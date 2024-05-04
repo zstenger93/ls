@@ -34,7 +34,7 @@ int ls(const char *path, t_flags *flags, char *files) {
       write(1, "  ", 2);
     }
     struct stat entryStat;
-    if (stat(entries[i]->d_name, &entryStat) == -1) {
+    if (lstat(entries[i]->d_name, &entryStat) == -1) {
       perror("stat");
       for (int j = 0; j < num_entries; j++) {
         free(entries[j]);
@@ -48,7 +48,17 @@ int ls(const char *path, t_flags *flags, char *files) {
       write(1, filename, ft_strlen(filename));
       write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
     } else if (S_ISREG(entryStat.st_mode)) {
-      write(1, FILE_COLOR, ft_strlen(FILE_COLOR));
+      if (entryStat.st_mode & S_IXUSR) {
+        write(1, EXECUTABLE_COLOR, ft_strlen(EXECUTABLE_COLOR));
+        write(1, filename, ft_strlen(filename));
+        write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
+      } else {
+        write(1, FILE_COLOR, ft_strlen(FILE_COLOR));
+        write(1, filename, ft_strlen(filename));
+        write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
+      }
+    } else if (S_ISLNK(entryStat.st_mode)) {
+      write(1, SYMLINK_COLOR, ft_strlen(SYMLINK_COLOR));
       write(1, filename, ft_strlen(filename));
       write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
     } else {

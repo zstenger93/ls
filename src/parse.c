@@ -2,7 +2,7 @@
 
 int parse_flags(int argc, char **argv, t_flags *flags, char **files) {
   int i, j;
-  char *valid_flags = "arlRt";
+  char *valid_flags = "arlRth";
 
   for (i = 1; i < argc; i++) {
     if (argv[i][0] == '-') {
@@ -19,6 +19,8 @@ int parse_flags(int argc, char **argv, t_flags *flags, char **files) {
             flags->l = 1;
           else if (argv[i][j] == 't')
             flags->t = 1;
+          else if (argv[i][j] == 'h')
+            flags->h = 1;
         } else {
           write(2, ERROR_TEXT_0, ft_strlen(ERROR_TEXT_0));
           write(2, &argv[i][j], 1);

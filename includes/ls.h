@@ -18,6 +18,7 @@
 #define GREEN "\x1b[32m"
 #define BOLD_GREEN "\x1b[32;1m"
 #define YELLOW "\x1b[33m"
+#define BOLD_YELLOW "\x1b[33;1m"
 #define BLUE "\x1b[34m"
 #define MAGENTA "\x1b[35m"
 #define CYAN "\x1b[96m"
@@ -28,8 +29,10 @@
 #define YELLOW_R YELLOW "r" COLOR_RESET
 #define GREEN_W GREEN "w" COLOR_RESET
 
-#define FOLDER_COLOR GREEN
+#define FOLDER_COLOR BLUE
 #define FILE_COLOR WHITE
+#define EXECUTABLE_COLOR BOLD_YELLOW
+#define SYMLINK_COLOR CYAN
 
 #define ERROR_TEXT_0                                                           \
   RED_BOLD "error:" COLOR_RESET " Found argument '" YELLOW "-"
@@ -54,6 +57,7 @@ typedef struct s_flags {
   int R;
   int l;
   int t;
+  int h;
 } t_flags;
 
 int ls(const char *path, t_flags *flags, char *files);
@@ -68,8 +72,8 @@ void process_multiple_folder_argument(t_flags *flags, char **files,
                                       int folder_count);
 
 // ls -l
-void long_format(struct dirent *entry);
-void readable_file_size(double size);
+void long_format(struct dirent *entry, t_flags *flags);
+void readable_file_size(double size, t_flags *flags);
 void write_file_permissions(struct stat fileStat);
 void print_filename_with_color(struct stat fileStat, char *entry_name);
 

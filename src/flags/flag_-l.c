@@ -4,7 +4,7 @@
     symbolic link display can be tested with:
     touch test1 && nl -s test1 test2
 */
-void long_format(struct dirent *entry) {
+void long_format(struct dirent *entry, t_flags *flags) {
   struct stat fileStat;
 
   if (lstat(entry->d_name, &fileStat) < 0)
@@ -28,7 +28,7 @@ void long_format(struct dirent *entry) {
   }
   write(1, "\t", 1);
 
-  readable_file_size(fileStat.st_size);
+  readable_file_size(fileStat.st_size, flags);
 
   char *time = ctime(&fileStat.st_mtime); // modification time
   time[ft_strlen(time) - 1] = '\0';
@@ -96,7 +96,7 @@ void write_file_permissions(struct stat fileStat) {
         ft_strlen((fileStat.st_mode & S_IXOTH) ? RED_X : "-"));
 }
 
-void readable_file_size(double size) {
+void readable_file_size(double size, t_flags *flags) {
   const char *units[] = {"B", "KB", "MB", "GB", "TB"};
   int i = 0;
 
@@ -106,13 +106,17 @@ void readable_file_size(double size) {
   }
 
   int int_size = (int)size;
-  char size_str[10];
+  char size_str[50];
   int_to_str(int_size, size_str);
-
-  write(1, size_str, ft_strlen(size_str));
-  write(1, " ", 1);
-  write(1, units[i], ft_strlen(units[i]));
-  write(1, "\t", 1);
+  if (flags->h) { // readable
+    write(1, size_str, ft_strlen(size_str));
+    write(1, " ", 1);
+    write(1, units[i], ft_strlen(units[i]));
+    write(1, "\t", 1);
+  } else { // normal
+    write(1, size_str, ft_strlen(size_str));
+    write(1, "\t", 1);
+  }
 }
 
 void print_filename_with_color(struct stat fileStat, char *entry_name) {
@@ -123,7 +127,17 @@ void print_filename_with_color(struct stat fileStat, char *entry_name) {
     write(1, filename, ft_strlen(filename));
     write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
   } else if (S_ISREG(fileStat.st_mode)) {
-    write(1, FILE_COLOR, ft_strlen(FILE_COLOR));
+    if (fileStat.st_mode & S_IXUSR) {
+      write(1, EXECUTABLE_COLOR, ft_strlen(EXECUTABLE_COLOR));
+      write(1, filename, ft_strlen(filename));
+      write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
+    } else {
+      write(1, FILE_COLOR, ft_strlen(FILE_COLOR));
+      write(1, filename, ft_strlen(filename));
+      write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
+    }
+  } else if (S_ISLNK(fileStat.st_mode)) {
+    write(1, SYMLINK_COLOR, ft_strlen(SYMLINK_COLOR));
     write(1, filename, ft_strlen(filename));
     write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
   } else {

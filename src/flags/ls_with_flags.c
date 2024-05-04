@@ -27,7 +27,7 @@ int ls_with_flags(t_flags *flags, char *files, int folder_count) {
   } // long listing format
   if (flags->l) {
     for (int i = 0; i < num_entries; i++) {
-      long_format(entries[i]);
+      long_format(entries[i], flags);
     }
   } // recursive directory listing
   if (flags->R) {
