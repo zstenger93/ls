@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 }
 
 int process_single_folder_argument(t_flags *flags, char **files) {
-  int y = 0;
+  int y = 1;
   while (files[y] != NULL) {
     if (files[y][0] != '\t') {
       break;
@@ -43,7 +43,7 @@ int process_single_folder_argument(t_flags *flags, char **files) {
 
 void process_multiple_folder_argument(t_flags *flags, char **files,
                                       int folder_count) {
-  int x = 0;
+  int x = 1;
   while (files[x] != NULL) {
     if (files[x][0] != '\t') {
       write(1, files[x], ft_strlen(files[x]));

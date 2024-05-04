@@ -58,6 +58,8 @@ typedef struct s_flags {
   int l;
   int t;
   int h;
+  int p;
+  int S;
 } t_flags;
 
 int ls(const char *path, t_flags *flags, char *files);
@@ -66,7 +68,7 @@ int ls_with_flags(t_flags *flags, char *files, int folder_count);
 int read_and_sort_directory(DIR *dir, struct s_flags *flags,
                             struct dirent *entries[], int folder_count,
                             char *files);
-void print_entries(struct dirent *entries[], int num_entries);
+void print_entries(struct dirent *entries[], int num_entries, t_flags *flags);
 int process_single_folder_argument(t_flags *flags, char **files);
 void process_multiple_folder_argument(t_flags *flags, char **files,
                                       int folder_count);
@@ -75,7 +77,8 @@ void process_multiple_folder_argument(t_flags *flags, char **files,
 void long_format(struct dirent *entry, t_flags *flags);
 void readable_file_size(double size, t_flags *flags);
 void write_file_permissions(struct stat fileStat);
-void print_filename_with_color(struct stat fileStat, char *entry_name);
+void print_filename_with_color(struct stat fileStat, char *entry_name,
+                               t_flags *flags);
 
 // ls -t
 void bubble_sort_time(struct dirent *arr[], int n);
@@ -88,11 +91,15 @@ void print_directory_contents_recursively(t_flags *flags, const char *dir_path,
                                           int folder_count);
 void construct_path(char *path, const char *dir_path, const char *entry_name);
 
+// ls -S
+void bubble_sort_size(struct dirent *arr[], int n);
+
 // UTILS
 void write_int(int num);
 int count_folders(char **files);
 void free_files(char **files, int len);
 void bubble_sort(struct dirent *arr[], int n);
+
 void int_to_str(int int_size, char *size_str);
 int ft_strcasecmp(const char *s1, const char *s2);
 

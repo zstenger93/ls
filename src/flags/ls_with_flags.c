@@ -17,13 +17,13 @@ int ls_with_flags(t_flags *flags, char *files, int folder_count) {
   }
   // order by modification time, always goes before -r
   if (flags->t && !flags->a && !flags->r && !flags->R && !flags->l) {
-    print_entries(entries, num_entries);
+    print_entries(entries, num_entries, flags);
   } // reverse order
   if (flags->r && !flags->a && !flags->t && !flags->R && !flags->l) {
-    print_entries(entries, num_entries);
+    print_entries(entries, num_entries, flags);
   } // showing all files
   if (flags->a && !flags->l && !flags->R) {
-    print_entries(entries, num_entries);
+    print_entries(entries, num_entries, flags);
   } // long listing format
   if (flags->l) {
     for (int i = 0; i < num_entries; i++) {
@@ -39,7 +39,7 @@ int ls_with_flags(t_flags *flags, char *files, int folder_count) {
     called = 1;
   } // default alphabetical order
   if (!flags->a && !flags->r && !flags->R && !flags->l && !flags->t) {
-    print_entries(entries, num_entries);
+    print_entries(entries, num_entries, flags);
   }
   for (int i = 0; i < num_entries; i++) {
     free(entries[i]);
@@ -77,7 +77,9 @@ int read_and_sort_directory(DIR *dir, struct s_flags *flags,
   }
   closedir(dir);
 
-  if (flags->t) {
+  if (flags->S) {
+    bubble_sort_size(entries, num_entries);
+  } else if (flags->t) {
     bubble_sort_time(entries, num_entries);
   } else {
     bubble_sort(entries, num_entries);
@@ -96,7 +98,7 @@ void reverse_entries(struct dirent *entries[], int num_entries) {
   }
 }
 
-void print_entries(struct dirent *entries[], int num_entries) {
+void print_entries(struct dirent *entries[], int num_entries, t_flags *flags) {
   for (int i = 0; i < num_entries; i++) {
     char *last_slash = ft_strrchr(entries[i]->d_name, '/');
     char *filename = last_slash ? last_slash + 1 : entries[i]->d_name;
@@ -108,7 +110,7 @@ void print_entries(struct dirent *entries[], int num_entries) {
       }
       return;
     }
-    print_filename_with_color(fileStat, filename);
+    print_filename_with_color(fileStat, filename, flags);
     write(1, "  ", 2);
   }
   write(1, "\n", 1);

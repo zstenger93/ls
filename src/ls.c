@@ -46,6 +46,8 @@ int ls(const char *path, t_flags *flags, char *files) {
     if (S_ISDIR(entryStat.st_mode)) {
       write(1, FOLDER_COLOR, ft_strlen(FOLDER_COLOR));
       write(1, filename, ft_strlen(filename));
+      if (flags->p)
+        write(1, "/", 1);
       write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
     } else if (S_ISREG(entryStat.st_mode)) {
       if (entryStat.st_mode & S_IXUSR) {

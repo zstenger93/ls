@@ -40,9 +40,27 @@ void bubble_sort_time(struct dirent *arr[], int n) {
       char path1[1024], path2[1024];
       ft_strlcpy(path1, arr[j]->d_name, sizeof(path1));
       ft_strlcpy(path2, arr[j + 1]->d_name, sizeof(path2));
-      stat(path1, &stat1);
-      stat(path2, &stat2);
+      lstat(path1, &stat1);
+      lstat(path2, &stat2);
       if (stat1.st_mtime < stat2.st_mtime) {
+        struct dirent *temp = arr[j];
+        arr[j] = arr[j + 1];
+        arr[j + 1] = temp;
+      }
+    }
+  }
+}
+
+void bubble_sort_size(struct dirent *arr[], int n) {
+  for (int i = 0; i < n - 1; i++) {
+    for (int j = 0; j < n - i - 1; j++) {
+      struct stat stat1, stat2;
+      char path1[1024], path2[1024];
+      ft_strlcpy(path1, arr[j]->d_name, sizeof(path1));
+      ft_strlcpy(path2, arr[j + 1]->d_name, sizeof(path2));
+      lstat(path1, &stat1);
+      lstat(path2, &stat2);
+      if (stat1.st_size < stat2.st_size) {
         struct dirent *temp = arr[j];
         arr[j] = arr[j + 1];
         arr[j + 1] = temp;
@@ -53,45 +71,45 @@ void bubble_sort_time(struct dirent *arr[], int n) {
 
 // Convert the integer size to a string
 void int_to_str(int int_size, char *size_str) {
-    int len = 0;
+  int len = 0;
 
-    if (int_size == 0) {
-        size_str[len++] = '0';
-    } else {
-        while (int_size != 0) {
-            size_str[len++] = '0' + (int_size % 10);
-            int_size /= 10;
-        }
+  if (int_size == 0) {
+    size_str[len++] = '0';
+  } else {
+    while (int_size != 0) {
+      size_str[len++] = '0' + (int_size % 10);
+      int_size /= 10;
     }
-    size_str[len] = '\0';
+  }
+  size_str[len] = '\0';
 
-    // Reverse the size string
-    for (int i = 0; i < len / 2; i++) {
-        char temp = size_str[i];
-        size_str[i] = size_str[len - i - 1];
-        size_str[len - i - 1] = temp;
-    }
+  // Reverse the size string
+  for (int i = 0; i < len / 2; i++) {
+    char temp = size_str[i];
+    size_str[i] = size_str[len - i - 1];
+    size_str[len - i - 1] = temp;
+  }
 }
 
 int count_folders(char **files) {
-    int folder_count = 0;
-    int x = 0;
+  int folder_count = 0;
+  int x = 1;
 
-    while (files[x] != NULL) {
-        if (files[x][0] != '\t') {
-            folder_count++;
-        }
-        x++;
+  while (files[x] != NULL) {
+    if (files[x][0] != '\t') {
+      folder_count++;
     }
+    x++;
+  }
 
-    return folder_count;
+  return folder_count;
 }
 
 void free_files(char **files, int len) {
-    for (int i = 0; i < len; i++) {
-        if (files[i] != NULL) {
-            free(files[i]);
-        }
+  for (int i = 0; i < len; i++) {
+    if (files[i] != NULL) {
+      free(files[i]);
     }
-    free(files);
+  }
+  free(files);
 }

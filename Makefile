@@ -58,6 +58,15 @@ fclean: clean
 
 re: fclean all
 
+speed:
+	@echo "$(YELLOW)Checking time for: $(DEF_COLOR)$(CYAN)ls$(DEF_COLOR)"
+	@/bin/bash -c 'time (ls -lR ../../Code/Transcendence > /dev/null) 2>&1'
+	@echo "$(GREEN)DONE$(DEF_COLOR)"
+	@echo ""
+	@echo "$(YELLOW)Checking time for: $(DEF_COLOR)$(CYAN)ft_ls$(DEF_COLOR)"
+	@/bin/bash -c 'time (./ft_ls -lR ../../Code/Transcendence > /dev/null) 2>&1'
+	@echo "$(GREEN)DONE$(DEF_COLOR)"
+
 DEF_COLOR = \033[0;39m
 CYAN3 = \033[1;4;96m
 YELLOW = \033[1;33m
@@ -68,4 +77,4 @@ GREEN = \033[0;92m
 CYAN2 = \x1B[1;36m
 CYAN = \033[1;96m
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re speed
