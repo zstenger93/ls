@@ -16,16 +16,7 @@ void long_format(struct dirent *entry, t_flags *flags) {
   write_int(fileStat.st_nlink); // number of hard links
   write(1, " ", 1);
 
-  struct passwd *pw = getpwuid(fileStat.st_uid); // name of the file's owner
-  if (pw != NULL) {
-    write(1, pw->pw_name, ft_strlen(pw->pw_name));
-    write(1, " ", 1);
-  }
-
-  struct group *gr = getgrgid(fileStat.st_gid); // group name
-  if (gr != NULL)
-    write(1, gr->gr_name, ft_strlen(gr->gr_name));
-  write(1, "\t", 1);
+  write_owner_and_group(fileStat, flags);
 
   readable_file_size(fileStat.st_size, flags);
 
@@ -46,6 +37,35 @@ void long_format(struct dirent *entry, t_flags *flags) {
     }
   }
   write(1, "\n", 1);
+}
+
+void write_owner_and_group(struct stat fileStat, t_flags *flags) {
+  if (flags->n && !flags->o) {
+    if (fileStat.st_uid == 0)
+      write(1, "0", 1);
+    else
+      write_int(fileStat.st_uid); // owner ID
+    write(1, " ", 1);
+  }
+  if (flags->n && !flags->g) {
+    if (fileStat.st_uid == 0)
+      write(1, "0", 1);
+    else
+      write_int(fileStat.st_gid); // group ID
+  }
+  if (!flags->n && !flags->o) {
+    struct passwd *pw = getpwuid(fileStat.st_uid); // name of the file's owner
+    if (pw != NULL) {
+      write(1, pw->pw_name, ft_strlen(pw->pw_name));
+      write(1, " ", 1);
+    }
+  }
+  if (!flags->n && !flags->g) {
+    struct group *gr = getgrgid(fileStat.st_gid); // group name
+    if (gr != NULL)
+      write(1, gr->gr_name, ft_strlen(gr->gr_name));
+  }
+  write(1, "\t", 1);
 }
 
 void write_file_permissions(struct stat fileStat) {

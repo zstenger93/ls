@@ -17,7 +17,7 @@ int ls_with_flags(t_flags *flags, char *files, int folder_count) {
     print_entries(entries, num_entries, flags); // reverse order
   if (flags->a && !flags->l && !flags->R)       // showing all files
     print_entries(entries, num_entries, flags);
-  if (flags->l) // long listing format
+  if (flags->l || flags->n || flags->o || flags->g) // long listing format
     for (int i = 0; i < num_entries; i++)
       long_format(entries[i], flags);
   if (flags->R) { // recursive directory listing
@@ -87,13 +87,13 @@ void print_entries(struct dirent *entries[], int num_entries, t_flags *flags) {
     char *last_slash = ft_strrchr(entries[i]->d_name, '/');
     char *filename = last_slash ? last_slash + 1 : entries[i]->d_name;
     struct stat fileStat;
-    if (stat(filename, &fileStat) == -1) {
+    if (lstat(entries[i]->d_name, &fileStat) == -1) {
       for (int j = 0; j < num_entries; j++)
         free(entries[j]);
       return perror("stat");
     }
     print_filename_with_color(fileStat, filename, flags);
-    write(1, "  ", 2);
+    write(1, !flags->x ? "  " : "\n", 2);
   }
-  write(1, "\n", 1);
+  write(1, !flags->x ? "\n" : "", 1);
 }

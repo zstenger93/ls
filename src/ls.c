@@ -25,7 +25,7 @@ int ls(const char *path, t_flags *flags, char *files) {
   bubble_sort(entries, num_entries);
   for (int i = 0; i < num_entries; i++) {
     if (i > 0)
-      write(1, "  ", 2);
+      write(1, !flags->x ? "  " : "\n", 2);
     struct stat entryStat;
     if (lstat(entries[i]->d_name, &entryStat) == -1) {
       for (int j = 0; j < num_entries; j++)

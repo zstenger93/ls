@@ -46,10 +46,11 @@
 #define HELP_TEXT GREEN " --help" COLOR_RESET "\n"
 
 #define PATH_ERR 2
-#define DIR_ERR 3
+#define DIR_ERR 2
 #define NONEXISTENT_ERR 2
-
 #define INVALID_FLAG 2
+
+#define HELP 66
 
 typedef struct s_flags {
   int a;
@@ -60,6 +61,11 @@ typedef struct s_flags {
   int h;
   int p;
   int S;
+  int n;
+  int g;
+  int o;
+  int x;
+  int help;
 } t_flags;
 
 // parsing
@@ -81,11 +87,13 @@ void print_entries(struct dirent *entries[], int num_entries, t_flags *flags);
 int process_single_folder_argument(t_flags *flags, char **files);
 void process_multiple_folder_argument(t_flags *flags, char **files,
                                       int folder_count);
+void display_help();
 
 // ls -l
 void long_format(struct dirent *entry, t_flags *flags);
 void readable_file_size(double size, t_flags *flags);
 void write_file_permissions(struct stat fileStat);
+void write_owner_and_group(struct stat fileStat, t_flags *flags);
 char get_file_type(struct stat fileStat);
 void print_filename_with_color(struct stat fileStat, char *entry_name,
                                t_flags *flags);

@@ -2,10 +2,12 @@
 
 int parse_flags(int argc, char **argv, t_flags *flags, char **files) {
   int i, j;
-  char *valid_flags = "arlRthpS";
+  char *valid_flags = "arlRthpSngox";
 
   for (i = 1; i < argc; i++) {
     if (argv[i][0] == '-') {
+      if (ft_strcmp(argv[i], "--help"))
+            return HELP;
       j = 1;
       while (argv[i][j]) {
         if (ft_pf_strchr(valid_flags, argv[i][j])) {
@@ -48,6 +50,18 @@ void set_flags(char arg, t_flags *flags) {
     break;
   case 'S':
     flags->S = 1;
+    break;
+  case 'n':
+    flags->n = 1;
+    break;
+  case 'g':
+    flags->g = 1;
+    break;
+  case 'o':
+    flags->o = 1;
+    break;
+  case 'x':
+    flags->x = 1;
     break;
   }
 }
