@@ -6,34 +6,22 @@ The goal is to recode a smaller version of the ls command
 
 ### Handled flags:
 
-`-l`
+`-l` Long listing format
 
-Long listing format
+`-a` Show hidden files starting with .
 
-`-a`
+`-r` Reverse the order of the list
 
-Show hidden files starting with .
+`-t` Order the list by the last modification date
 
-`-r`
+`-R` List everything recursively
 
-Reverse the order of the list
+`-p` Show / after folders
 
-`-t`
+`-h` Human readable display for size
 
-Order the list by the last modification date
+`-S` Order by file size
 
-`-R`
+It can take flags one by one as `-l -a` for example or `-la`
 
-List everything recursively
-
-`-p`
-
-Show / after folders
-
-`-h`
-
-Human readable display for size
-
-`-S`
-
-Order by file size
+Also can pass one or more folders in argument for example `./ft_ls src -laR includes`
