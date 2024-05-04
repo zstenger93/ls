@@ -5,50 +5,50 @@
 The goal is to recode a smaller version of the ls command
 
 ### Handled flags:
-``
+```
 -l
-``
+```
 
-long listing format
+Long listing format
 
-``
+```
 -a
-``
+```
 
-show hidden files starting with .
+Show hidden files starting with .
 
-``
+```
 -r
-``
+```
 
-reverse the order of the list
+Reverse the order of the list
 
-``
+```
 -t
-``
+```
 
-order the list by the last modification date
+Order the list by the last modification date
 
-``
+```
 -R
-``
+```
 
-list everything recursively
+List everything recursively
 
-``
+```
 -p
-``
+```
 
-show / after folders
+Show / after folders
 
-``
+```
 -h
-``
+```
 
-human readable display for size
+Human readable display for size
 
-``
+```
 -S
-``
+```
 
-order by file size
+Order by file size
