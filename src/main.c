@@ -1,7 +1,7 @@
 #include "../includes/ls.h"
 
 int main(int argc, char **argv) {
-  int exit_status = 0, len = 0, folder_count = 0, y = 1, x = 1;
+  int exit_status = 0, len = 0, folder_count = 0;
   t_flags flags;
   char **files = malloc((argc + 1) * sizeof(char *));
 
@@ -15,44 +15,43 @@ int main(int argc, char **argv) {
   } else {
     exit_status = parse_flags(argc, argv, &flags, files);
     if (exit_status == 0) {
-      while (files[x] != NULL) {
-        if (files[x][0] != '\t') {
-          folder_count++;
-        }
-        x++;
-      }
+      folder_count = count_folders(files);
       if (folder_count > 0) {
         if (folder_count == 1) {
-          while (files[y] != NULL) {
-            if (files[y][0] != '\t') {
-              break;
-            }
-            y++;
-          }
-          exit_status = ls_with_flags(&flags, files[y], folder_count);
+          exit_status = process_single_folder_argument(&flags, files);
         } else {
-          x = 1;
-          while (files[x] != NULL) {
-            if (files[x][0] != '\t') {
-              write(1, files[x], ft_strlen(files[x]));
-              write(1, ":\n", 2);
-              ls_with_flags(&flags, files[x], folder_count);
-              if (files[x + 1] != NULL)
-                write(1, "\n", 1);
-            }
-            x++;
-          }
+          process_multiple_folder_argument(&flags, files, folder_count);
         }
       } else
         exit_status = ls_with_flags(&flags, ".", folder_count);
     }
   }
-  for (int i = 0; i < len; i++) {
-    if (files[i] != NULL) {
-      free(files[i]);
-    }
-  }
-  free(files);
-
+  free_files(files, len);
   return exit_status;
+}
+
+int process_single_folder_argument(t_flags *flags, char **files) {
+  int y = 0;
+  while (files[y] != NULL) {
+    if (files[y][0] != '\t') {
+      break;
+    }
+    y++;
+  }
+  return ls_with_flags(flags, files[y], 1);
+}
+
+void process_multiple_folder_argument(t_flags *flags, char **files,
+                                      int folder_count) {
+  int x = 0;
+  while (files[x] != NULL) {
+    if (files[x][0] != '\t') {
+      write(1, files[x], ft_strlen(files[x]));
+      write(1, ":\n", 2);
+      ls_with_flags(flags, files[x], folder_count);
+      if (files[x + 1] != NULL)
+        write(1, "\n", 1);
+    }
+    x++;
+  }
 }

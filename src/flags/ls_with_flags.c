@@ -15,7 +15,6 @@ int ls_with_flags(t_flags *flags, char *files, int folder_count) {
   if (num_entries < 0) {
     return DIR_ERR;
   }
-
   // order by modification time, always goes before -r
   if (flags->t && !flags->a && !flags->r && !flags->R && !flags->l) {
     print_entries(entries, num_entries);
@@ -29,7 +28,6 @@ int ls_with_flags(t_flags *flags, char *files, int folder_count) {
   if (flags->l) {
     for (int i = 0; i < num_entries; i++) {
       long_format(entries[i]);
-      //   free(entries[i]);
     }
   } // recursive directory listing
   if (flags->R) {
@@ -68,14 +66,12 @@ int read_and_sort_directory(DIR *dir, struct s_flags *flags,
       entries[num_entries] = malloc(sizeof(struct dirent));
       ft_memcpy(entries[num_entries], entry, sizeof(struct dirent));
       (void)folder_count;
-      //   if (folder_count > 0) {
       char temp[1024];
       ft_strlcpy(temp, files, sizeof(temp));
       ft_strlcat(temp, "/", sizeof(temp));
       ft_strlcat(temp, entries[num_entries]->d_name, sizeof(temp));
       ft_strlcpy(entries[num_entries]->d_name, temp,
                  sizeof(entries[num_entries]->d_name));
-      // }
       num_entries++;
     }
   }
@@ -107,21 +103,13 @@ void print_entries(struct dirent *entries[], int num_entries) {
     struct stat fileStat;
     if (stat(filename, &fileStat) == -1) {
       perror("stat");
+      for (int j = 0; j < num_entries; j++) {
+        free(entries[j]);
+      }
       return;
     }
-    if (S_ISDIR(fileStat.st_mode)) {
-      write(1, FOLDER_COLOR, ft_strlen(FOLDER_COLOR));
-      write(1, filename, ft_strlen(filename));
-      write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
-    } else if (S_ISREG(fileStat.st_mode)) {
-      write(1, FILE_COLOR, ft_strlen(FILE_COLOR));
-      write(1, filename, ft_strlen(filename));
-      write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
-    } else {
-      write(1, filename, ft_strlen(filename));
-    }
+    print_filename_with_color(fileStat, filename);
     write(1, "  ", 2);
-    // free(entries[i]);
   }
   write(1, "\n", 1);
 }

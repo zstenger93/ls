@@ -29,25 +29,13 @@ void long_format(struct dirent *entry) {
   write(1, "\t", 1);
 
   readable_file_size(fileStat.st_size);
-  write(1, "\t", 1);
 
   char *time = ctime(&fileStat.st_mtime); // modification time
   time[ft_strlen(time) - 1] = '\0';
   write(1, time, ft_strlen(time));
   write(1, " ", 1);
 
-  char *last_slash = ft_strrchr(entry->d_name, '/');
-  char *filename = last_slash ? last_slash + 1 : entry->d_name;
-  if (S_ISDIR(fileStat.st_mode)) {
-    write(1, FOLDER_COLOR, ft_strlen(FOLDER_COLOR));
-    write(1, filename, ft_strlen(filename));
-    write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
-  } else if (S_ISREG(fileStat.st_mode)) {
-    write(1, FILE_COLOR, ft_strlen(FILE_COLOR));
-    write(1, filename, ft_strlen(filename));
-    write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
-  } else
-    write(1, filename, ft_strlen(filename));
+  print_filename_with_color(fileStat, entry->d_name);
 
   if (S_ISLNK(fileStat.st_mode)) {
     char link_target[1024];
@@ -58,7 +46,6 @@ void long_format(struct dirent *entry) {
       write(1, link_target, ft_strlen(link_target));
     }
   }
-
   write(1, "\n", 1);
 }
 
@@ -125,4 +112,21 @@ void readable_file_size(double size) {
   write(1, size_str, ft_strlen(size_str));
   write(1, " ", 1);
   write(1, units[i], ft_strlen(units[i]));
+  write(1, "\t", 1);
+}
+
+void print_filename_with_color(struct stat fileStat, char *entry_name) {
+  char *last_slash = ft_strrchr(entry_name, '/');
+  char *filename = last_slash ? last_slash + 1 : entry_name;
+  if (S_ISDIR(fileStat.st_mode)) {
+    write(1, FOLDER_COLOR, ft_strlen(FOLDER_COLOR));
+    write(1, filename, ft_strlen(filename));
+    write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
+  } else if (S_ISREG(fileStat.st_mode)) {
+    write(1, FILE_COLOR, ft_strlen(FILE_COLOR));
+    write(1, filename, ft_strlen(filename));
+    write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
+  } else {
+    write(1, filename, ft_strlen(filename));
+  }
 }

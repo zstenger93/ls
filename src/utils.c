@@ -72,3 +72,26 @@ void int_to_str(int int_size, char *size_str) {
         size_str[len - i - 1] = temp;
     }
 }
+
+int count_folders(char **files) {
+    int folder_count = 0;
+    int x = 0;
+
+    while (files[x] != NULL) {
+        if (files[x][0] != '\t') {
+            folder_count++;
+        }
+        x++;
+    }
+
+    return folder_count;
+}
+
+void free_files(char **files, int len) {
+    for (int i = 0; i < len; i++) {
+        if (files[i] != NULL) {
+            free(files[i]);
+        }
+    }
+    free(files);
+}
