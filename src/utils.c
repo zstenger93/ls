@@ -25,9 +25,8 @@ void bubble_sort(struct dirent *arr[], int n) {
 
 void write_int(int num) {
   char c;
-  if (num == 0) {
+  if (num == 0)
     return;
-  }
   write_int(num / 10);
   c = '0' + num % 10;
   write(1, &c, 1);
@@ -96,9 +95,8 @@ int count_folders(char **files) {
   int x = 1;
 
   while (files[x] != NULL) {
-    if (files[x][0] != '\t') {
+    if (files[x][0] != '\t')
       folder_count++;
-    }
     x++;
   }
 
@@ -107,9 +105,8 @@ int count_folders(char **files) {
 
 void free_files(char **files, int len) {
   for (int i = 0; i < len; i++) {
-    if (files[i] != NULL) {
+    if (files[i] != NULL)
       free(files[i]);
-    }
   }
   free(files);
 }

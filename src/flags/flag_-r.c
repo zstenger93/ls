@@ -1,13 +1,11 @@
 #include "../../includes/ls.h"
 
-void print_directory_contents_recursively(t_flags *flags,
-                                          const char *dir_path, int folder_count) {
+void print_directory_contents_recursively(t_flags *flags, const char *dir_path,
+                                          int folder_count) {
   DIR *dir = opendir(dir_path);
 
-  if (dir == NULL) {
-    perror("Unable to open directory");
-    return;
-  }
+  if (dir == NULL)
+    return perror("Unable to open directory");
 
   struct dirent *entry;
   while ((entry = readdir(dir)) != NULL) {
@@ -36,7 +34,7 @@ void print_directory_contents_recursively(t_flags *flags,
 }
 
 /*
-    always updating the and constructing the
+    always updating and constructing the
     current path for the recursive call
 */
 void construct_path(char *path, const char *dir_path, const char *entry_name) {

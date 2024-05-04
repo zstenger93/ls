@@ -16,16 +16,15 @@ void long_format(struct dirent *entry, t_flags *flags) {
   write_int(fileStat.st_nlink); // number of hard links
   write(1, " ", 1);
 
-  struct passwd *pw = getpwuid(fileStat.st_uid);
-  if (pw != NULL) { // name of the file's owner
+  struct passwd *pw = getpwuid(fileStat.st_uid); // name of the file's owner
+  if (pw != NULL) {
     write(1, pw->pw_name, ft_strlen(pw->pw_name));
     write(1, " ", 1);
   }
 
-  struct group *gr = getgrgid(fileStat.st_gid);
-  if (gr != NULL) { // group name
+  struct group *gr = getgrgid(fileStat.st_gid); // group name
+  if (gr != NULL)
     write(1, gr->gr_name, ft_strlen(gr->gr_name));
-  }
   write(1, "\t", 1);
 
   readable_file_size(fileStat.st_size, flags);
@@ -37,7 +36,7 @@ void long_format(struct dirent *entry, t_flags *flags) {
 
   print_filename_with_color(fileStat, entry->d_name, flags);
 
-  if (S_ISLNK(fileStat.st_mode)) {
+  if (S_ISLNK(fileStat.st_mode)) { // symbolic link
     char link_target[1024];
     ssize_t len = readlink(entry->d_name, link_target, sizeof(link_target) - 1);
     if (len != -1) {
@@ -50,25 +49,7 @@ void long_format(struct dirent *entry, t_flags *flags) {
 }
 
 void write_file_permissions(struct stat fileStat) {
-  // file type: 'd' for directory, '-' for regular file
-  char type;
-  if (S_ISREG(fileStat.st_mode)) {
-    type = '-';
-  } else if (S_ISDIR(fileStat.st_mode)) {
-    type = 'd';
-  } else if (S_ISCHR(fileStat.st_mode)) {
-    type = 'c';
-  } else if (S_ISBLK(fileStat.st_mode)) {
-    type = 'b';
-  } else if (S_ISFIFO(fileStat.st_mode)) {
-    type = 'p';
-  } else if (S_ISLNK(fileStat.st_mode)) {
-    type = 'l';
-  } else if (S_ISSOCK(fileStat.st_mode)) {
-    type = 's';
-  } else {
-    type = '?';
-  }
+  char type = get_file_type(fileStat);
   write(1, &type, 1);
 
   // user permissions: 'r' for read, 'w' for write, 'x' for execute
@@ -96,6 +77,26 @@ void write_file_permissions(struct stat fileStat) {
         ft_strlen((fileStat.st_mode & S_IXOTH) ? RED_X : "-"));
 }
 
+char get_file_type(struct stat fileStat) {
+  if (S_ISREG(fileStat.st_mode)) {
+    return '-'; // regular file
+  } else if (S_ISDIR(fileStat.st_mode)) {
+    return 'd'; // directory
+  } else if (S_ISCHR(fileStat.st_mode)) {
+    return 'c'; // character device
+  } else if (S_ISBLK(fileStat.st_mode)) {
+    return 'b'; // block device
+  } else if (S_ISFIFO(fileStat.st_mode)) {
+    return 'p'; // FIFO (named pipe)
+  } else if (S_ISLNK(fileStat.st_mode)) {
+    return 'l'; // symbolic link
+  } else if (S_ISSOCK(fileStat.st_mode)) {
+    return 's'; // socket
+  } else {
+    return '?'; // unknown
+  }
+}
+
 void readable_file_size(double size, t_flags *flags) {
   const char *units[] = {"B", "KB", "MB", "GB", "TB"};
   int i = 0;
@@ -108,7 +109,7 @@ void readable_file_size(double size, t_flags *flags) {
   int int_size = (int)size;
   char size_str[50];
   int_to_str(int_size, size_str);
-  if (flags->h) { // readable
+  if (flags->h) { // human readable format
     write(1, size_str, ft_strlen(size_str));
     write(1, " ", 1);
     write(1, units[i], ft_strlen(units[i]));
@@ -119,14 +120,16 @@ void readable_file_size(double size, t_flags *flags) {
   }
 }
 
-void print_filename_with_color(struct stat fileStat, char *entry_name, t_flags *flags) {
+void print_filename_with_color(struct stat fileStat, char *entry_name,
+                               t_flags *flags) {
   char *last_slash = ft_strrchr(entry_name, '/');
   char *filename = last_slash ? last_slash + 1 : entry_name;
+
   if (S_ISDIR(fileStat.st_mode)) {
     write(1, FOLDER_COLOR, ft_strlen(FOLDER_COLOR));
     write(1, filename, ft_strlen(filename));
     if (flags->p)
-        write(1, "/", 1);
+      write(1, "/", 1);
     write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
   } else if (S_ISREG(fileStat.st_mode)) {
     if (fileStat.st_mode & S_IXUSR) {
@@ -142,7 +145,6 @@ void print_filename_with_color(struct stat fileStat, char *entry_name, t_flags *
     write(1, SYMLINK_COLOR, ft_strlen(SYMLINK_COLOR));
     write(1, filename, ft_strlen(filename));
     write(1, COLOR_RESET, ft_strlen(COLOR_RESET));
-  } else {
+  } else
     write(1, filename, ft_strlen(filename));
-  }
 }

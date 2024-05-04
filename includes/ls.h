@@ -62,12 +62,21 @@ typedef struct s_flags {
   int S;
 } t_flags;
 
-int ls(const char *path, t_flags *flags, char *files);
+// parsing
 int parse_flags(int argc, char **argv, t_flags *flags, char **files);
+void display_error_message(char *argv[], int i, int j);
+void set_flags(char arg, t_flags *flags);
+int save_file_and_folder_names(char *path, char **files, int index);
+
+// simple ls
+int ls(const char *path, t_flags *flags, char *files);
+void write_colored_filename(struct stat entryStat, char *filename,
+                            t_flags *flags);
+
+// ls with flags and directories
 int ls_with_flags(t_flags *flags, char *files, int folder_count);
 int read_and_sort_directory(DIR *dir, struct s_flags *flags,
-                            struct dirent *entries[], int folder_count,
-                            char *files);
+                            struct dirent *entries[], char *files);
 void print_entries(struct dirent *entries[], int num_entries, t_flags *flags);
 int process_single_folder_argument(t_flags *flags, char **files);
 void process_multiple_folder_argument(t_flags *flags, char **files,
@@ -77,6 +86,7 @@ void process_multiple_folder_argument(t_flags *flags, char **files,
 void long_format(struct dirent *entry, t_flags *flags);
 void readable_file_size(double size, t_flags *flags);
 void write_file_permissions(struct stat fileStat);
+char get_file_type(struct stat fileStat);
 void print_filename_with_color(struct stat fileStat, char *entry_name,
                                t_flags *flags);
 
@@ -94,12 +104,11 @@ void construct_path(char *path, const char *dir_path, const char *entry_name);
 // ls -S
 void bubble_sort_size(struct dirent *arr[], int n);
 
-// UTILS
+// utils
 void write_int(int num);
 int count_folders(char **files);
 void free_files(char **files, int len);
 void bubble_sort(struct dirent *arr[], int n);
-
 void int_to_str(int int_size, char *size_str);
 int ft_strcasecmp(const char *s1, const char *s2);
 

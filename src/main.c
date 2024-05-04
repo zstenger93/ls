@@ -1,13 +1,12 @@
 #include "../includes/ls.h"
 
 int main(int argc, char **argv) {
-  int exit_status = 0, len = 0, folder_count = 0;
   t_flags flags;
+  int exit_status = 0, len = 0, folder_count = 0;
   char **files = malloc((argc + 1) * sizeof(char *));
 
-  for (; len <= argc; len++) {
+  for (; len <= argc; len++)
     files[len] = NULL;
-  }
   ft_memset(&flags, 0, sizeof(t_flags));
 
   if (argc == 1) {
@@ -33,9 +32,8 @@ int main(int argc, char **argv) {
 int process_single_folder_argument(t_flags *flags, char **files) {
   int y = 1;
   while (files[y] != NULL) {
-    if (files[y][0] != '\t') {
+    if (files[y][0] != '\t')
       break;
-    }
     y++;
   }
   return ls_with_flags(flags, files[y], 1);
