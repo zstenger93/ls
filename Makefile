@@ -5,7 +5,6 @@ LIBFT		= libft/libft.a
 INC			= ./includes/
 SRC_DIRS 	= ./src/ ./src/flags/
 OBJ_DIR		= ./objects
-NAME		= ft_ls
 SRC			= $(wildcard src/*.c src/flags/*.c)
 OBJS		= $(SRC:%.c=$(OBJ_DIR)/%.o)
 
