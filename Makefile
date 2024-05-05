@@ -13,13 +13,13 @@ all: $(LIBFT) $(NAME)
 
 $(OBJ_DIR):
 	@echo "$(YELLOW)Creating: $(DEF_COLOR)$(CYAN)OBJ_DIR$(DEF_COLOR)"
-	mkdir -p $(OBJ_DIR)/src
-	mkdir -p $(OBJ_DIR)/src/flags
+	mkdir -p $(OBJ_DIR)
 	@echo "$(GREEN)DONE$(DEF_COLOR)"
 	@echo ""
 	@echo "$(YELLOW)Creating: $(DEF_COLOR)$(CYAN)OBJ_FILES$(DEF_COLOR)"
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I $(INC) -o $@ -c $<
 
 $(NAME): $(OBJS)
@@ -72,8 +72,8 @@ CYAN3 = \033[1;4;96m
 YELLOW = \033[1;33m
 PURPLE = \033[1;35m
 BWhite = \033[1;37m
-RED = \033[0;91m
-GREEN = \033[0;92m
+RED = \033[1;91m
+GREEN = \033[1;92m
 CYAN2 = \x1B[1;36m
 CYAN = \033[1;96m
 

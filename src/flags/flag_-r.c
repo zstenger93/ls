@@ -38,17 +38,12 @@ void print_directory_contents_recursively(t_flags *flags, const char *dir_path,
     current path for the recursive call
 */
 void construct_path(char *path, const char *dir_path, const char *entry_name) {
-  int i = 0;
-  while (dir_path[i] != '\0') {
+  int i = -1, j = -1;
+  while (dir_path[++i] != '\0')
     path[i] = dir_path[i];
-    i++;
-  }
   path[i] = '/';
   i++;
-  int j = 0;
-  while (entry_name[j] != '\0') {
+  while (entry_name[++j] != '\0')
     path[i + j] = entry_name[j];
-    j++;
-  }
   path[i + j] = '\0';
 }

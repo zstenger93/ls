@@ -66,6 +66,9 @@ typedef struct s_flags {
   int o;
   int x;
   int help;
+  int time_iso;
+  int time_full_iso;
+  int time_long_iso;
 } t_flags;
 
 // parsing
@@ -94,9 +97,17 @@ void long_format(struct dirent *entry, t_flags *flags);
 void readable_file_size(double size, t_flags *flags);
 void write_file_permissions(struct stat fileStat);
 void write_owner_and_group(struct stat fileStat, t_flags *flags);
+void write_timestamp(struct stat fileStat, t_flags *flags);
 char get_file_type(struct stat fileStat);
+void get_date_str(const char *time, char *month_str, char *day_str);
+void write_iso(const char *month_str, const char *day_str, const char *time);
+void write_long_iso(const char *time, const char *month_str,
+                    const char *day_str);
+void write_full_iso(struct stat fileStat, char *time, char *month_str,
+                    char *day_str);
 void print_filename_with_color(struct stat fileStat, char *entry_name,
                                t_flags *flags);
+void print_symbolic_link_target(struct dirent *entry, struct stat fileStat);
 
 // ls -t
 void bubble_sort_time(struct dirent *arr[], int n);

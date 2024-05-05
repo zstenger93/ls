@@ -30,7 +30,7 @@ int ls(const char *path, t_flags *flags, char *files) {
     if (lstat(entries[i]->d_name, &entryStat) == -1) {
       for (int j = 0; j < num_entries; j++)
         free(entries[j]);
-      return perror("stat"), PATH_ERR;
+      return perror("lstat"), PATH_ERR;
     }
     char *last_slash = ft_strrchr(entries[i]->d_name, '/');
     char *filename = last_slash ? last_slash + 1 : entries[i]->d_name;

@@ -5,9 +5,7 @@ int parse_flags(int argc, char **argv, t_flags *flags, char **files) {
   char *valid_flags = "arlRthpSngox";
 
   for (i = 1; i < argc; i++) {
-    if (argv[i][0] == '-') {
-      if (ft_strcmp(argv[i], "--help"))
-            return HELP;
+    if (argv[i][0] == '-' && argv[i][1] && argv[i][1] != '-') {
       j = 1;
       while (argv[i][j]) {
         if (ft_pf_strchr(valid_flags, argv[i][j])) {
@@ -17,6 +15,18 @@ int parse_flags(int argc, char **argv, t_flags *flags, char **files) {
         j++;
       }
       files[i] = ft_strdup("\t");
+    } else if (argv[i][0] == '-' && argv[i][1] && argv[i][1] == '-') {
+      if (ft_strcmp(argv[i], "--help"))
+        return HELP;
+      else if (ft_strncmp(argv[i], "--time-style=", 13) == 0) {
+        if (ft_strncmp(argv[i], "--time-style=iso", 16) == 0)
+          flags->time_iso = 1;
+        else if (ft_strncmp(argv[i], "--time-style=full-iso", 21) == 0)
+          flags->time_full_iso = 1;
+        else if (ft_strncmp(argv[i], "--time-style=long-iso", 21) == 0)
+          flags->time_long_iso = 1;
+      } else
+        return display_error_message(argv, i, j), INVALID_FLAG;
     } else {
       if (save_file_and_folder_names(argv[i], files, i) == NONEXISTENT_ERR)
         return NONEXISTENT_ERR;
