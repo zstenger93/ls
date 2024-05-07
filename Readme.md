@@ -37,3 +37,5 @@ Also can pass one or more folders in argument for example `./ft_ls src -laR incl
 Colorized output for permissions and file/folders
 
 `--help` for basic information
+
+`--time-style=` for different time outputs with `iso`, `full-iso` and `long-iso`
