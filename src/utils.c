@@ -41,7 +41,16 @@ void bubble_sort_time(struct dirent *arr[], int n) {
       ft_strlcpy(path2, arr[j + 1]->d_name, sizeof(path2));
       lstat(path1, &stat1);
       lstat(path2, &stat2);
-      if (stat1.st_mtime < stat2.st_mtime) {
+
+      int time_cmp = stat1.st_mtime - stat2.st_mtime;
+      if (time_cmp == 0) {
+#ifdef __APPLE__
+        time_cmp = stat1.st_mtimespec.tv_nsec - stat2.st_mtimespec.tv_nsec;
+#else
+        time_cmp = stat1.st_mtim.tv_nsec - stat2.st_mtim.tv_nsec;
+#endif
+      }
+      if (time_cmp < 0) {
         struct dirent *temp = arr[j];
         arr[j] = arr[j + 1];
         arr[j + 1] = temp;
