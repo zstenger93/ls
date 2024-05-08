@@ -46,6 +46,7 @@ int process_single_folder_argument(t_flags *flags, char **files) {
 int process_multiple_folder_argument(t_flags *flags, char **files,
                                       int folder_count) {
   int x = 1, exit_status = 0;
+
   while (files[x] != NULL) {
     if (files[x][0] != '\t') {
       write(1, files[x], ft_strlen(files[x]));

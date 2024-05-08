@@ -23,10 +23,12 @@ int ls_with_flags(t_flags *flags, char *files, int folder_count) {
   if (flags->R) { // recursive directory listing
     if ((folder_count == 0 && !flags->l) || !flags->l)
       ls(files, flags, files);
-    static int called = 0;
-    if (called == 0)
+    // static int called = 0;
+	int i = 0;
+    if (i <= folder_count)
       print_directory_contents_recursively(flags, files, folder_count);
-    called = 1;
+	i++;
+    // called = 1;
   } // default alphabetical order
   if (!flags->a && !flags->r && !flags->R && !flags->l && !flags->t)
     print_entries(entries, num_entries, flags);

@@ -8,17 +8,15 @@ void print_directory_contents_recursively(t_flags *flags, const char *dir_path,
 		return perror("Unable to open directory");
 
 	struct dirent *entry = NULL;
+	struct stat path_stat = {0}, path_stat_check = {0};
+	char path[1024] = "";
 	while ((entry = readdir(dir)) != NULL) {
-		struct stat path_stat = {0};
 		stat(entry->d_name, &path_stat);
 
 		if (S_ISDIR(path_stat.st_mode) && ft_strncmp(entry->d_name, ".", 1) != 0 &&
 				ft_strncmp(entry->d_name, "..", 2) != 0) {
-			char path[1024] = "";
 
 			construct_path(path, dir_path, entry->d_name);
-
-			struct stat path_stat_check = {0};
 			stat(path, &path_stat_check);
 
 			if (S_ISDIR(path_stat_check.st_mode)) {
