@@ -88,7 +88,7 @@ int read_and_sort_directory(DIR *dir, struct s_flags *flags,
                             struct dirent *entries[], char *files);
 void print_entries(struct dirent *entries[], int num_entries, t_flags *flags);
 int process_single_folder_argument(t_flags *flags, char **files);
-void process_multiple_folder_argument(t_flags *flags, char **files,
+int process_multiple_folder_argument(t_flags *flags, char **files,
                                       int folder_count);
 void display_help();
 

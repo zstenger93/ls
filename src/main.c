@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
         if (folder_count == 1) {
           exit_status = process_single_folder_argument(&flags, files);
         } else {
-          process_multiple_folder_argument(&flags, files, folder_count);
+          exit_status = process_multiple_folder_argument(&flags, files, folder_count);
         }
       } else
         exit_status = ls_with_flags(&flags, ".", folder_count);
@@ -43,19 +43,20 @@ int process_single_folder_argument(t_flags *flags, char **files) {
   return ls_with_flags(flags, files[y], 1);
 }
 
-void process_multiple_folder_argument(t_flags *flags, char **files,
+int process_multiple_folder_argument(t_flags *flags, char **files,
                                       int folder_count) {
-  int x = 1;
+  int x = 1, exit_status = 0;
   while (files[x] != NULL) {
     if (files[x][0] != '\t') {
       write(1, files[x], ft_strlen(files[x]));
       write(1, ":\n", 2);
-      ls_with_flags(flags, files[x], folder_count);
+      exit_status = ls_with_flags(flags, files[x], folder_count);
       if (files[x + 1] != NULL)
         write(1, "\n", 1);
     }
     x++;
   }
+  return exit_status;
 }
 
 void display_help() {
