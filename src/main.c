@@ -35,20 +35,38 @@ int main(int argc, char **argv) {
 
 int process_single_folder_argument(t_flags *flags, char **files) {
   int y = 1;
+  struct stat path_stat;
   while (files[y] != NULL) {
-    if (files[y][0] != '\t')
-      break;
+  stat(files[y], &path_stat);
+	if (files[y][0] != '\t' && S_ISDIR(path_stat.st_mode))
+		return ls_with_flags(flags, files[y], 1);
+	else if (files[y][0] != '\t') {
+		write(1, files[y], ft_strlen(files[y]));					;
+		write(1, "\n", 1);
+	}
     y++;
   }
-  return ls_with_flags(flags, files[y], 1);
+  return 0;
 }
 
 int process_multiple_folder_argument(t_flags *flags, char **files,
                                       int folder_count) {
   int x = 1, exit_status = 0;
-
+  struct stat path_stat;
   while (files[x] != NULL) {
-    if (files[x][0] != '\t') {
+	stat(files[x], &path_stat);
+	if (files[x][0] != '\t' && !S_ISDIR(path_stat.st_mode)) {
+	  write(1, files[x], ft_strlen(files[x]));
+	  write(1, " ", 1);
+	}
+	x++;
+  }
+  if (files[x] == NULL)
+	write(1, "\n\n", 2);
+  x = 1;
+  while (files[x] != NULL) {
+	stat(files[x], &path_stat);
+    if (files[x][0] != '\t' && S_ISDIR(path_stat.st_mode)) {
       write(1, files[x], ft_strlen(files[x]));
       write(1, ":\n", 2);
       exit_status = ls_with_flags(flags, files[x], folder_count);
